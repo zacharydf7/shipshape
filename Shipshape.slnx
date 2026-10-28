@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/spike/">
+    <Project Path="spike/Shipshape.Spike/Shipshape.Spike.csproj" />
+    <Project Path="spike/Shipshape.Spike.Tests/Shipshape.Spike.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,10 @@
+SET QUOTED_IDENTIFIER ON;
+GO
+
+IF DB_ID(N'Library') IS NULL
+    CREATE DATABASE [Library];
+GO
+
+USE [Library];
+GO
+
