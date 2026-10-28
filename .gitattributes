@@ -1,0 +1,4 @@
+* text=auto
+
+# SQL scripts: LF everywhere so Windows and Linux compare equal
+*.sql text eol=lf

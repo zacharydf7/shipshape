@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+      <TargetFramework>net10.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+      <Authors>Zachary Fry</Authors>
+      <Product>Shipshape</Product>
+  </PropertyGroup>
+
+  <!-- Package details. A release sets the version from its git tag. -->
+  <PropertyGroup>
+      <Version>0.1.0-dev</Version>
+      <Copyright>Copyright (c) 2026 Zachary Fry</Copyright>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <PackageProjectUrl>https://github.com/zacharydf7/shipshape</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/zacharydf7/shipshape</RepositoryUrl>
+      <PackageTags>entity-framework-core;ef-core;migrations;sql-server;deployment-scripts;approval-tests;testing</PackageTags>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+      <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
+</Project>
