@@ -11,7 +11,8 @@ internal sealed class ThrowawayDatabase : IAsyncDisposable
 
     private ThrowawayDatabase(string serverConnectionString)
     {
-        _serverConnectionString = serverConnectionString;
+        // The caller's database may not exist yet, so creating and dropping go through master.
+        _serverConnectionString = new SqlConnectionStringBuilder(serverConnectionString) { InitialCatalog = "master" }.ConnectionString;
         Name = Prefix + Guid.NewGuid().ToString("N");
         ConnectionString = new SqlConnectionStringBuilder(serverConnectionString) { InitialCatalog = Name }.ConnectionString;
     }

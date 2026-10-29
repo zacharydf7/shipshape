@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Shipshape.Tests.Toys;
 
@@ -78,6 +79,17 @@ public class VerifyAgainstServerTests
             () => MigrationScript.For(context, folder.File("Planner.sql"), options).VerifyAgainstServerAsync(server));
 
         Assert.Contains("AppliesToEmptyDatabase: ", error.Message);
+    }
+
+    [Fact]
+    public async Task VerifyAgainstServerAsync_ShouldPass_WhenConnectionStringNamesMissingDatabase()
+    {
+        var server = new SqlConnectionStringBuilder(SqlServer.ConnectionString()) { InitialCatalog = "shipshape_missing" }.ConnectionString;
+        await using var context = ToyContexts.Create("Library");
+
+        var script = MigrationScript.For(context, ToyContexts.ScriptPath("Library"), ToyContexts.ScriptOptions("Library"));
+
+        await script.VerifyAgainstServerAsync(server);
     }
 
     [Fact]

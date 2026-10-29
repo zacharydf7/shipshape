@@ -1,4 +1,5 @@
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Shipshape.Tests.Toys;
 
@@ -38,6 +39,35 @@ public class ScriptGeneratorTests
         var script = ScriptGenerator.Generate(wrapping);
 
         Assert.Equal(ScriptGenerator.Generate(plain), script);
+    }
+
+    // Billing's custom history table must survive the copy; Planner's custom SQL must come out wrapped.
+    [Theory]
+    [InlineData("Planner")]
+    [InlineData("Billing")]
+    public void GenerateWithExecWrapping_ShouldMatchOptionsExtension_WhenContextHasNoWrapping(string name)
+    {
+        using var unwrapped = name == "Planner" ? ToyContexts.UnwrappedPlanner() : ToyContexts.Create(name);
+        using var wrapping = ToyContexts.Create(name, wrapCustomSql: true);
+
+        var script = ScriptGenerator.GenerateWithExecWrapping(unwrapped);
+
+        Assert.Equal(ScriptGenerator.Generate(wrapping), script);
+    }
+
+    [Fact]
+    public void GenerateWithExecWrapping_ShouldThrow_WhenContextHasNoOptionsConstructor()
+    {
+        using var context = new NoOptionsConstructorContext();
+
+        var error = Assert.Throws<MigrationScriptException>(() => ScriptGenerator.GenerateWithExecWrapping(context));
+
+        Assert.Contains("needs NoOptionsConstructorContext to have a constructor that takes only its options", error.Message);
+    }
+
+    private sealed class NoOptionsConstructorContext : DbContext
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(ToyContexts.Unreachable);
     }
 
     private sealed class ConnectionCounter : DbConnectionInterceptor

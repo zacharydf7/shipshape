@@ -47,8 +47,11 @@ public sealed class MigrationScript
     /// Regenerates the script from the context's migrations, header included, and fails with a diff when the file differs.
     /// Needs no database. With SHIPSHAPE_ACCEPT=1 it rewrites the file instead, keeping its line endings and BOM.
     /// </summary>
-    public Task VerifyFileAsync() =>
-        ScriptFile.VerifyAsync(FullPath, Header(_options.DatabaseName) + ScriptGenerator.Generate(_context), AcceptMode.IsOn());
+    public Task VerifyFileAsync()
+    {
+        var script = _options.WrapCustomSqlInExec ? ScriptGenerator.GenerateWithExecWrapping(_context) : ScriptGenerator.Generate(_context);
+        return ScriptFile.VerifyAsync(FullPath, Header(_options.DatabaseName) + script, AcceptMode.IsOn());
+    }
 
     /// <summary>
     /// Applies the checked-in script and the context's migrations to two throwaway databases on the server, then runs every

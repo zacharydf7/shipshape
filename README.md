@@ -141,6 +141,11 @@ It changes only idempotent scripts, so `Migrate()` and bundles behave as before,
 produces the same script Shipshape does. SQL you already wrapped in `EXEC(N'...')` is left alone. Each wrapped batch is
 its own scope, so a `#temp` table created in one batch is gone in the next.
 
+For a context whose options you can't change, such as one another package registers, set
+`WrapCustomSqlInExec = true` in its `MigrationScriptOptions` instead. Shipshape then generates the script from a copy of
+the context with the wrapping turned on, which needs a constructor that takes only the context's options. `dotnet ef
+migrations script` still writes the unwrapped script for that context, so regenerate the file with `SHIPSHAPE_ACCEPT=1`.
+
 To fix a single migration instead, call `migrationBuilder.SqlExec("...")` in place of `migrationBuilder.Sql("...")`.
 
 ## Known EF behavior worth knowing

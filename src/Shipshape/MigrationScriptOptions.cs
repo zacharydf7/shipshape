@@ -9,6 +9,13 @@ public sealed class MigrationScriptOptions
     public ScriptHeader Header { get; init; }
 
     /// <summary>
+    /// Wraps custom SQL in EXEC when generating this script, as <c>WrapCustomSqlInExec()</c> on the context's options
+    /// does. Use it for a context whose options you can't change, such as one another package registers. The context
+    /// needs a constructor that takes only its options.
+    /// </summary>
+    public bool WrapCustomSqlInExec { get; init; }
+
+    /// <summary>
     /// Checks <see cref="MigrationScript.VerifyAgainstServerAsync"/> leaves out, for example
     /// <see cref="ScriptCheck.NoPendingModelChanges"/> for a context another package owns. Each check's own remarks say
     /// what else skipping it needs.

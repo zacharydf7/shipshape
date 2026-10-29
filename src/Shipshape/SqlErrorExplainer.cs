@@ -29,8 +29,9 @@ internal static class SqlErrorExplainer
             : "An idempotent script puts every statement inside IF NOT EXISTS (...) BEGIN ... END, where CREATE VIEW, "
               + "PROCEDURE, FUNCTION and TRIGGER aren't allowed.";
         return $"Migration {id} fails in the idempotent script: {failure.InnerException!.Message} {cause} Add "
-            + "WrapCustomSqlInExec() to the context's options, or change its migrationBuilder.Sql(...) to "
-            + "migrationBuilder.SqlExec(...), then regenerate the script.";
+            + "WrapCustomSqlInExec() to the context's options, set MigrationScriptOptions.WrapCustomSqlInExec when you "
+            + "can't change them, or change its migrationBuilder.Sql(...) to migrationBuilder.SqlExec(...), then regenerate "
+            + "the script.";
     }
 
     // 156 is any syntax error near a keyword; only one near a module keyword comes from the IF ... BEGIN wrapper.

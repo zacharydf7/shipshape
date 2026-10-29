@@ -19,6 +19,23 @@ public class MigrationScriptTests
         await script.VerifyFileAsync();
     }
 
+    // Planner's script was generated with WrapCustomSqlInExec() on its options; the option gives the same script.
+    [Fact]
+    public async Task VerifyFileAsync_ShouldWrapCustomSql_WhenOptionIsOnForUnwrappedContext()
+    {
+        await using var context = ToyContexts.UnwrappedPlanner();
+        var options = ToyContexts.ScriptOptions("Planner");
+
+        var script = MigrationScript.For(context, ToyContexts.ScriptPath("Planner"), new MigrationScriptOptions
+        {
+            DatabaseName = options.DatabaseName,
+            Header = options.Header,
+            WrapCustomSqlInExec = true,
+        });
+
+        await script.VerifyFileAsync();
+    }
+
     [Fact]
     public void For_ShouldThrow_WhenHeaderUsesDatabaseWithoutName()
     {
