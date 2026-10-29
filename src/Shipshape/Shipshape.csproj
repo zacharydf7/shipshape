@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Keeps EF Core's idempotent SQL Server deployment scripts generated, current and proven. One test regenerates each checked-in script with its header and fails with a diff when it is stale. Another applies the script and the migrations to two throwaway databases and proves they build the same schema, and that a second run changes nothing.</Description>
+    <!-- Ships the doc comments for IntelliSense. Comments describe only what needs explaining, so a member or parameter
+         without one doesn't fail the build. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The lowest EF Core 10 patch, so consumers keep their own: the version EF writes into history inserts must not change. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
+    <!-- Microsoft.Data.SqlClient brings a version with known vulnerabilities (GHSA-846f-f764-76mx). -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Shipshape.Tests.Unit" />
+    <InternalsVisibleTo Include="Shipshape.Tests.SqlServer" />
+  </ItemGroup>
+
+</Project>

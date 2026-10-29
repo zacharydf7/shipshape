@@ -25,8 +25,20 @@ files to an installer or a DBA. One test regenerates each checked-in script with
 `SHIPSHAPE_ACCEPT=1` to rewrite the file). A second tier applies the script and EF's migrations to two throwaway
 databases and proves they build the same schema, and that a second run changes nothing.
 
-The repo is at the feasibility stage: `spike/` holds the prototypes that answer the design's go/no-go questions. The
-library (`src/Shipshape`) and its tests come after the gate is approved.
+## Layout
+
+- `src/Shipshape`: the package. Public: `MigrationScript` (`For`, `VerifyFileAsync`, `VerifyAgainstServerAsync`),
+  `MigrationScriptOptions`, `ScriptHeader`, `ScriptCheck`, `MigrationScriptException`, `WrapCustomSqlInExec()` and
+  `migrationBuilder.SqlExec(...)`. Everything else is internal.
+- `ServerChecks` runs the second tier; `SchemaSnapshot` describes a database from SQL Server's catalog views as sorted
+  lines of text. Changing what a snapshot line says changes every consumer's failure messages, so call it out.
+- `tests/Shipshape.Tests.Toys`: toy contexts with hand-written migrations, shared by both test projects.
+  `tests/Scripts` holds their checked-in scripts, which the tests verify as a consumer would.
+- `tests/Shipshape.Tests.Unit`: no database. `DotnetEf/*.sql` is `dotnet ef migrations script --idempotent` output
+  for the toys; regenerate it with `dotnet ef migrations script --idempotent --no-build --project
+  tests/Shipshape.Tests.Toys --context <Name>Context --output tests/Shipshape.Tests.Unit/DotnetEf/<Name>.sql`.
+- `tests/Shipshape.Tests.SqlServer`: everything that needs SQL Server.
+- The feasibility spikes that preceded v0.1 are in the history at commit e3ad95c.
 
 ## Build and test
 
@@ -48,6 +60,8 @@ dotnet test -c Release
 - Name tests `Method_Should<Expectation>_When<Condition>`. Separate arrange, act and assert with blank lines, not
   comments.
 - Build test inputs in code: toy contexts and hand-written migrations. Never check in real-world scripts or databases.
+- After changing a toy migration, regenerate its `DotnetEf` golden, then run the unit tests with `SHIPSHAPE_ACCEPT=1`
+  to update `tests/Scripts`.
 
 ## Code style
 
@@ -55,3 +69,4 @@ dotnet test -c Release
   most a one-line comment explaining why.
 - Make every option discoverable through an enum or static class, so users don't need to know SQL Server internals.
 - Use American English. Fill lines to about 120 characters instead of putting one parameter per line.
+- Keep `README.md` self-contained, and update it when the public API or what the snapshot compares changes.

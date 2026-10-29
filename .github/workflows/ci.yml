@@ -22,7 +22,7 @@ jobs:
           dotnet-version: 10.0.x
       - run: dotnet test -c Release
 
-  # Runs the tests again with a SQL Server to talk to. Service containers only run on Linux runners.
+  # The SQL Server tests, which the test job skips. Service containers only run on Linux runners.
   sqlserver:
     runs-on: ubuntu-latest
     services:
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet test -c Release
+      - run: dotnet test --project tests/Shipshape.Tests.SqlServer -c Release
 
   # A version tag such as v0.1.0 publishes that version to nuget.org, once every test job passes.
   publish:

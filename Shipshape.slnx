@@ -1,6 +1,10 @@
 <Solution>
-  <Folder Name="/spike/">
-    <Project Path="spike/Shipshape.Spike/Shipshape.Spike.csproj" />
-    <Project Path="spike/Shipshape.Spike.Tests/Shipshape.Spike.Tests.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/Shipshape/Shipshape.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Shipshape.Tests.Toys/Shipshape.Tests.Toys.csproj" />
+    <Project Path="tests/Shipshape.Tests.Unit/Shipshape.Tests.Unit.csproj" />
+    <Project Path="tests/Shipshape.Tests.SqlServer/Shipshape.Tests.SqlServer.csproj" />
   </Folder>
 </Solution>
